@@ -1,0 +1,82 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian, english]{babel}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subfigure}
+\usepackage{hyperref}
+%\usepackage{fixltx2e} %Para subscripts
+\usepackage{pgfplots}
+\usepackage{textcomp}
+\usepackage{enumitem}
+\usepackage{multicol}
+
+
+\title{\textbf{Tooth Growth, Vitamin C and Orange Juice - A Statistical Approach}}
+\author{\textit{Eric Calasans de Barros}}
+
+\begin{document}
+        \section{Introduction}
+        In this paper we want study the influence of vitamin C ingest in teeth growth applying some statistical techniques.
+        
+        \section{Metodology}
+        \subsection{Loading Data}
+        First we load the ToothGrowt dataset from \texttt{dataset} library in R and the others necessary libraries.  Here's the code:
+<<loading, size="small", message=FALSE>>=
+library(datasets)
+library(ggplot2)
+library(dplyr)
+
+TG <- data.frame(ToothGrowth)
+@
+        \subsection{Exploratory Data Analysis}
+        Next, we can take a look at the data structure, contents and statistical elements such as mean, min, max, etc.
+<<viewData, size='small'>>=
+str(TG)
+head(TG)
+summary(TG)
+@        
+	We can observe that the dataset is composed by 3 variables:
+	\begin{itemize}
+		\item \texttt{len} - tooth length(numerical);
+		\item \texttt{supp} - a factor indicating Orange Juice(OJ) or Vitamin C(VC);
+		\item \texttt{dose} - dose(mg).		
+	\end{itemize}
+	
+	Here we have some exploratory data analysis in the dataset.  First, to make easy for plotting, we convert \texttt{dose} to a factor variable because there are only three kind of quantity:
+<<doseFactor, size="small">>=
+TG <- mutate(TG, dose = as.factor(dose))
+@
+  We can make somoe plots and see what we can find:
+<<plot1, size="small", fig.height=4, fig.width=4, warning=FALSE,error=FALSE, fig.align='center'>>=
+g1 <- ggplot(TG, aes(x=dose, y=len, fill=supp))
+g1 <- g1 + geom_boxplot() + facet_grid(.~supp)
+g1 <- g1 + ggtitle("Tooth Growth x Dose x Supp Type")
+g1 <- g1 + labs(x = "Dose(mg)", y = "Teeth Length")
+g1 <- g1 + guides(fill=guide_legend("Supp type"))
+g1
+@
+
+As far we can observe, when dose increases the tooth length increases too, no matter what kind of supplement is given.  Now let's compare supplement type closely.
+<<plot2, size="small", fig.height=4, fig.width=4, warning=FALSE,error=FALSE, fig.align='center'>>=
+g2 <- ggplot(TG, aes(x=supp, y=len, fill=supp))
+g2 <- g2 + geom_boxplot(aes(fill=supp)) + facet_wrap(~ dose)
+g2 <- g2 + ggtitle("Tooth Growth x Dose x Supp Type")
+g2 <- g2 + labs(x = "Dose(mg)", y = "Teeth Length")
+g2 <- g2 + guides(fill=guide_legend("Supp type"))
+g2
+@
+
+In this plot we can see that low doses of OJ increases tooth growth comparing with VC, which is as effective as OJ in higher doses.
+
+        \subsection{Hypotesis Test}
+        Hypotesis Tests are a powerful tool in data analysis when we want achieve statistical support for certain statements.  For this dataset we want verify influence of kind of supplement and dose amount in tooth growth in a more detailed way.  We will test first if kind of supplement influences tooth growth and after that, given one of the doses if one or more is involved in incresase of growth.\\
+        
+        For this purpose, given the fact that we don't know population mean and population variance, the \textbf{t-test} is indicated.
+\end{document}
+
+
