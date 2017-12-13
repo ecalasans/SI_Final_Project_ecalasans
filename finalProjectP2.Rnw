@@ -77,6 +77,7 @@ In this plot we can see that low doses of OJ increases tooth growth comparing wi
         Hypotesis Tests are a powerful tool in data analysis when we want achieve statistical support for certain statements.  For this dataset we want verify influence of kind of supplement and dose amount in tooth growth in a more detailed way.  We will test first if kind of supplement influences tooth growth and after that, given one of the doses if one or more is involved in incresase of growth.\\
         
         For this purpose, given the fact that we don't know population mean and population variance, the \textbf{t-test} is indicated.
+                \subsubsection{Testing Doses}
 \end{document}
 
 
