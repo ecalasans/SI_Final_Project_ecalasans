@@ -20,6 +20,7 @@
 \author{\textit{Eric Calasans de Barros}}
 
 \begin{document}
+        \maketitle
         \section{Introduction}
         In this paper we want study the influence of vitamin C ingest in teeth growth applying some statistical techniques.
         
@@ -73,11 +74,56 @@ g2
 
 In this plot we can see that low doses of OJ increases tooth growth comparing with VC, which is as effective as OJ in higher doses.
 
-        \subsection{Hypotesis Test}
-        Hypotesis Tests are a powerful tool in data analysis when we want achieve statistical support for certain statements.  For this dataset we want verify influence of kind of supplement and dose amount in tooth growth in a more detailed way.  We will test first if kind of supplement influences tooth growth and after that, given one of the doses if one or more is involved in incresase of growth.\\
+        \subsection{Hypothesis Test}
+        Hypothesis Tests are a powerful tool in data analysis when we want achieve statistical support for certain statements.  For this dataset we want verify influence of kind of supplement and dose amount in tooth growth in a more detailed way.  We will test first if kind of supplement influences tooth growth and after that, given one of the doses if one or more is involved in incresase of growth.\\
         
         For this purpose, given the fact that we don't know population mean and population variance, the \textbf{t-test} is indicated.
-                \subsubsection{Testing Doses}
+                \subsubsection{Testing Supplements}
+                Given $\alpha = 0.05$ here is hypothesis test for supplements:
+                \begin{itemize}
+                	\item \textit{H\textsubscript{0}}:  supplement changes tooth growth;
+                	\item \textit{H\textsubscript{a}}:  supplement doesn't change tooth growth.
+                \end{itemize}
+<<testSupp, size="small", message=FALSE>>=
+len <- TG$len
+suppl <- TG$supp
+t.test(len~suppl, paired=FALSE)
+@
+                We observe $p = 0.06063 > \alpha$ and we can reject \textit{H\textsubscript{0}} given $\alpha$.
+                
+                \subsection{Testing Doses}
+                For this hypothesis test we need to test each dose(0.5, 1 and 2) separately and check the outcomes.  Here is the statments:
+                \begin{itemize}
+                	\item \textit{H\textsubscript{0}}:  increasing doses doesn't change tooth growth;
+                	\item \textit{H\textsubscript{a}}:  increasing doses changes tooth growth.
+                \end{itemize}
+                
+                And the tests:
+                \begin{itemize}
+                  \item \textbf{Dose = 0.5 and 1}
+<<doseA, size="small">>=
+len1 <- filter(TG, dose == c(0.5, 1)) %>% select(len)
+dose1 <- filter(TG, dose == c(0.5, 1)) %>% select(dose)
+t.test(len1$len~dose1$dose, paired = FALSE)
+@
+                  \item \textbf{Dose = 0.5 and 1}
+<<doseB, size="small">>=
+len2 <- filter(TG, dose == c(0.5, 2)) %>% select(len)
+dose2 <- filter(TG, dose == c(0.5, 2)) %>% select(dose)
+t.test(len2$len~dose2$dose, paired = FALSE)
+@
+                 \item \textbf{Dose = 1 and 2}
+<<doseC, size="small">>=
+len3 <- filter(TG, dose == c(0.5, 2)) %>% select(len)
+dose3 <- filter(TG, dose == c(0.5, 2)) %>% select(dose)
+t.test(len3$len~dose3$dose, paired = FALSE)
+@
+                \end{itemize}
+                
+                We observe that all \textit{p-values} are less than $\alpha$ so we can reject the null hypothesis with $\alpha = 0.05$.  By these hypothesis tests we conclude that increasing doses of supplement, no matter what, implies in increase of tooth growth.
+                \section{Conclusion}
+                 Statistical Inference tools are very useful, since well-handled, when we intend to change raw data in information.
 \end{document}
+
 
 

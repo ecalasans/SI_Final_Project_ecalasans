@@ -70,6 +70,7 @@
 \author{\textit{Eric Calasans de Barros}}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
+        \maketitle
         \section{Introduction}
         In this paper we want study the influence of vitamin C ingest in teeth growth applying some statistical techniques.
         
@@ -82,10 +83,7 @@
 \hlkwd{library}\hlstd{(datasets)}
 \hlkwd{library}\hlstd{(ggplot2)}
 \hlkwd{library}\hlstd{(dplyr)}
-\end{alltt}
 
-
-{\ttfamily\noindent\color{warningcolor}{\#\# Warning: package 'dplyr' was built under R version 3.4.2}}\begin{alltt}
 \hlstd{TG} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(ToothGrowth)}
 \end{alltt}
 \end{kframe}
@@ -188,11 +186,124 @@ As far we can observe, when dose increases the tooth length increases too, no ma
 
 In this plot we can see that low doses of OJ increases tooth growth comparing with VC, which is as effective as OJ in higher doses.
 
-        \subsection{Hypotesis Test}
-        Hypotesis Tests are a powerful tool in data analysis when we want achieve statistical support for certain statements.  For this dataset we want verify influence of kind of supplement and dose amount in tooth growth in a more detailed way.  We will test first if kind of supplement influences tooth growth and after that, given one of the doses if one or more is involved in incresase of growth.\\
+        \subsection{Hypothesis Test}
+        Hypothesis Tests are a powerful tool in data analysis when we want achieve statistical support for certain statements.  For this dataset we want verify influence of kind of supplement and dose amount in tooth growth in a more detailed way.  We will test first if kind of supplement influences tooth growth and after that, given one of the doses if one or more is involved in incresase of growth.\\
         
         For this purpose, given the fact that we don't know population mean and population variance, the \textbf{t-test} is indicated.
-                \subsubsection{Testing Doses}
+                \subsubsection{Testing Supplements}
+                Given $\alpha = 0.05$ here is hypothesis test for supplements:
+                \begin{itemize}
+                	\item \textit{H\textsubscript{0}}:  supplement changes tooth growth;
+                	\item \textit{H\textsubscript{a}}:  supplement doesn't change tooth growth.
+                \end{itemize}
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{len} \hlkwb{<-} \hlstd{TG}\hlopt{$}\hlstd{len}
+\hlstd{suppl} \hlkwb{<-} \hlstd{TG}\hlopt{$}\hlstd{supp}
+\hlkwd{t.test}\hlstd{(len}\hlopt{~}\hlstd{suppl,} \hlkwc{paired}\hlstd{=}\hlnum{FALSE}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  len by suppl
+## t = 1.9153, df = 55.309, p-value = 0.06063
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.1710156  7.5710156
+## sample estimates:
+## mean in group OJ mean in group VC 
+##         20.66333         16.96333
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+                We observe $p = 0.06063 > \alpha$ and we can reject \textit{H\textsubscript{0}} given $\alpha$.
+                
+                \subsection{Testing Doses}
+                For this hypothesis test we need to test each dose(0.5, 1 and 2) separately and check the outcomes.  Here is the statments:
+                \begin{itemize}
+                	\item \textit{H\textsubscript{0}}:  increasing doses doesn't change tooth growth;
+                	\item \textit{H\textsubscript{a}}:  increasing doses changes tooth growth.
+                \end{itemize}
+                
+                And the tests:
+                \begin{itemize}
+                  \item \textbf{Dose = 0.5 and 1}
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{len1} \hlkwb{<-} \hlkwd{filter}\hlstd{(TG, dose} \hlopt{==} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,} \hlnum{1}\hlstd{))} \hlopt{%>%} \hlkwd{select}\hlstd{(len)}
+\hlstd{dose1} \hlkwb{<-} \hlkwd{filter}\hlstd{(TG, dose} \hlopt{==} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,} \hlnum{1}\hlstd{))} \hlopt{%>%} \hlkwd{select}\hlstd{(dose)}
+\hlkwd{t.test}\hlstd{(len1}\hlopt{$}\hlstd{len}\hlopt{~}\hlstd{dose1}\hlopt{$}\hlstd{dose,} \hlkwc{paired} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  len1$len by dose1$dose
+## t = -4.4725, df = 17.976, p-value = 0.0002952
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -14.43327  -5.20673
+## sample estimates:
+## mean in group 0.5   mean in group 1 
+##             10.63             20.45
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+                  \item \textbf{Dose = 0.5 and 1}
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{len2} \hlkwb{<-} \hlkwd{filter}\hlstd{(TG, dose} \hlopt{==} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,} \hlnum{2}\hlstd{))} \hlopt{%>%} \hlkwd{select}\hlstd{(len)}
+\hlstd{dose2} \hlkwb{<-} \hlkwd{filter}\hlstd{(TG, dose} \hlopt{==} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,} \hlnum{2}\hlstd{))} \hlopt{%>%} \hlkwd{select}\hlstd{(dose)}
+\hlkwd{t.test}\hlstd{(len2}\hlopt{$}\hlstd{len}\hlopt{~}\hlstd{dose2}\hlopt{$}\hlstd{dose,} \hlkwc{paired} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  len2$len by dose2$dose
+## t = -7.3335, df = 17.635, p-value = 9.362e-07
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -19.72833 -10.93167
+## sample estimates:
+## mean in group 0.5   mean in group 2 
+##             10.63             25.96
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+                 \item \textbf{Dose = 1 and 2}
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{len3} \hlkwb{<-} \hlkwd{filter}\hlstd{(TG, dose} \hlopt{==} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,} \hlnum{2}\hlstd{))} \hlopt{%>%} \hlkwd{select}\hlstd{(len)}
+\hlstd{dose3} \hlkwb{<-} \hlkwd{filter}\hlstd{(TG, dose} \hlopt{==} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{,} \hlnum{2}\hlstd{))} \hlopt{%>%} \hlkwd{select}\hlstd{(dose)}
+\hlkwd{t.test}\hlstd{(len3}\hlopt{$}\hlstd{len}\hlopt{~}\hlstd{dose3}\hlopt{$}\hlstd{dose,} \hlkwc{paired} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  len3$len by dose3$dose
+## t = -7.3335, df = 17.635, p-value = 9.362e-07
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -19.72833 -10.93167
+## sample estimates:
+## mean in group 0.5   mean in group 2 
+##             10.63             25.96
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+                \end{itemize}
+                
+                We observe that all \textit{p-values} are less than $\alpha$ so we can reject the null hypothesis with $\alpha = 0.05$.  By these hypothesis tests we conclude that increasing doses of supplement, no matter what, implies in increase of tooth growth.
+                \section{Conclusion}
+                 Statistical Inference tools are very useful, since well-handled, when we intend to change raw data in information.
 \end{document}
+
 
 
